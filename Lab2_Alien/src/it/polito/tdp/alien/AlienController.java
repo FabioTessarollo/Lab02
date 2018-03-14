@@ -7,7 +7,7 @@ package it.polito.tdp.alien;
 
 
 import java.net.URL;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,6 +17,9 @@ import javafx.scene.control.TextField;
 
 public class AlienController {
 	
+	TreeMap<String, String> dizionario = new TreeMap<String, String>();
+
+	 
     @FXML
     private ResourceBundle resources;
     @FXML
@@ -43,13 +46,41 @@ public class AlienController {
     
     @FXML
     void doTranslate(ActionEvent event) {
+    	String inserimento = txtWord.getText().toLowerCase();
+    	boolean primoNumero = false;
+    	for(int i = 0; i < 10; i++) {
+    		if(inserimento.contains("" + i)) {
+    			txtResult.appendText("Niente numeri! \n");
+    			primoNumero = true;
+    		}
+    	}
+    	if (!primoNumero) {
+	    	String[] parole = inserimento.split(" ");
+	    	if(parole.length == 1) {
+	    		txtResult.appendText(dizionario.get(inserimento) + "\n");
+	    	} else if (parole.length == 2) {
+	    		if(dizionario.containsKey(parole[0])) {
+	    			String giaPresenti = dizionario.get(parole[0]);
+	    			String nuove = giaPresenti + "; " + parole[1];
+	    			dizionario.replace(parole[0], nuove);
+	    			txtWord.clear();
+	    		} else {
+		    		dizionario.put(parole[0], parole[1]);
+		    		txtWord.clear();
+	    		}
+	    	} else {
+	    		txtResult.appendText("Errore inserimento");
+	    		txtWord.clear();
+	    	}
+    	}
     	    	
     }
     
     
     @FXML
     void doReset(ActionEvent event) {
-
+    	txtWord.clear();
+    	txtResult.clear();
     }
     
 }
